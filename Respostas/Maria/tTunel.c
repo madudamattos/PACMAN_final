@@ -5,20 +5,15 @@
 #include "tTunel.h"
 #include "tPosicao.h"
 
-/**
- * Cria o tunel dinamicamente.
- * Dadas as posições de linha e coluna dos 2 acessos do tunel,
- * cria duas instancias tPosicao dinamicamente, uma pra cada acesso, insere as
- * inforações das posições passadas como parâmetro. Cria o tTunel dinamicamente.
- * Atribui as duas instancias tPosicao aos acessos do túnel, retorna o ponteiro para
- * o túnel.
- * \param linhaAcesso1 linha da posição do acesso 1 do túnel
- * \param colunaAcesso1 coluna da posição do acesso 1 do túnel
- * \param linhaAcesso2 linha da posição do acesso 2 do túnel
- * \param colunaAcesso2 coluna da posição do acesso 2 do túnel
- */
+
 tTunel* CriaTunel(int linhaAcesso1, int colunaAcesso1, int linhaAcesso2, int colunaAcesso2){
     tTunel* tunel = NULL;
+    tunel = calloc(1, sizeof(tTunel));
+
+    if(tunel == NULL){
+        printf("Erro na alocacao do tunel\n");
+        exit(1);
+    }
 
     tunel->acesso1->linha = linhaAcesso1;
     tunel->acesso1->coluna = colunaAcesso1;
@@ -28,16 +23,9 @@ tTunel* CriaTunel(int linhaAcesso1, int colunaAcesso1, int linhaAcesso2, int col
     return tunel;
 }
 
-/**
- * Verifica se entrou no túnel pela posição.
- * Dado o túnel e a posição atual do pacman,
- * verifica se a posição do pacman é a mesma de algum dos 
- * dois acessos do túnel.
- * \param tunel tunel
- * \param posicao posição
- */
 bool EntrouTunel(tTunel* tunel, tPosicao* posicao){
-    if( (posicao->linha == tunel->acesso1->linha && posicao->coluna == tunel->acesso1->coluna) || (posicao->linha == tunel->acesso2->linha && posicao->coluna == tunel->acesso2->coluna)){
+
+    if(posicao == tunel->acesso1 || posicao == tunel->acesso2){
         return true;
     }
     else{
@@ -45,29 +33,25 @@ bool EntrouTunel(tTunel* tunel, tPosicao* posicao){
     }
 }
 
-/**
- * Atualiza a posição para o final do túnel.
- * Caso a posição do pacman seja a mesma de algum dos 2 
- * acessos do túnel, atualiza ela para o outro acesso do túnel.
- * \param tunel tunel
- * \param posicao posição
- */
 void LevaFinalTunel(tTunel* tunel, tPosicao* posicao){
-    if((posicao->linha == tunel->acesso1->linha && posicao->coluna == tunel->acesso1->coluna)){
-        posicao->linha = tunel->acesso2->linha;
-        posicao->coluna = tunel->acesso2->coluna;
+
+    if(EntrouTunel(tunel, posicao)){
+        if(posicao == tunel->acesso1){
+            posicao = tunel->acesso2;
+        }
+        else if(posicao == tunel->acesso2){
+            posicao = tunel->acesso1;
+        }
     }
-    else if((posicao->linha == tunel->acesso2->linha && posicao->coluna == tunel->acesso2->coluna)){
-        posicao->linha = tunel->acesso1->linha;
-        posicao->coluna = tunel->acesso1->coluna;
-    }
+   
 }
 
 void DesalocaTunel(tTunel* tunel){
 
-    if(tunel == NULL) return;
+    if(tunel != NULL) {
+        DesalocaPosicao(tunel->acesso1);
+        DesalocaPosicao(tunel->acesso2);
+        free(tunel);
+    }
 
-    DesalocaPosicao(tunel->acesso1);
-    DesalocaPosicao(tunel->acesso2);
-    free(tunel);
 }

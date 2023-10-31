@@ -11,7 +11,7 @@
  * \param coluna coluna da posição
  */
 tPosicao* CriaPosicao(int linha, int coluna){
-    tPosicao* posicao = (tPosicao*) malloc (sizeof(tPosicao));
+    tPosicao* posicao = (tPosicao*) calloc (1,sizeof(tPosicao));
    if(posicao == NULL){
         printf("Erro na alocacao de memória da posicao!");
     }
@@ -33,24 +33,15 @@ tPosicao* ClonaPosicao(tPosicao* posicao){
         printf("Erro na alocacao de memória da posicao!");
     }
 
-    posicaoClone->linha = posicao->linha;
-    posicaoClone->coluna = posicao->coluna;
+    posicaoClone = posicao;
 
     return posicaoClone;
 }
 
-/**
- * Retorna a linha da posição
- * \param posicao posição
- */
 int ObtemLinhaPosicao(tPosicao* posicao){
     return posicao->linha;
 }
 
-/**
- * Retorna a coluna da posição
- * \param posicao posição
- */
 int ObtemColunaPosicao(tPosicao* posicao){
     return posicao->coluna;
 }
@@ -73,6 +64,8 @@ void AtualizaPosicao(tPosicao* posicaoAtual, tPosicao* posicaoNova){
  * \param posicao2 posição 2
  */
 bool SaoIguaisPosicao(tPosicao* posicao1, tPosicao* posicao2){
+    if(posicao1 == NULL || posicao2 == NULL) return NULL;
+    
     if((posicao1->linha == posicao2->linha) && (posicao1->coluna == posicao2->coluna)){
         return true;
     }

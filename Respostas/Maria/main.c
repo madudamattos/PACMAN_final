@@ -3,8 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 #include "tPosicao.h"
-#include "tTunel.h"
 #include "tMapa.h"
+#include "tTunel.h"
 #include "tMovimento.h"
 #include "tPacman.h"
 
