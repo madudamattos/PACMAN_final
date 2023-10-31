@@ -13,8 +13,18 @@
 tPacman* CriaPacman(tPosicao* posicao){
     tPacman* pacman = calloc(1, sizeof(tPacman));
 
-    pacman->posicaoAtual->coluna = posicao->coluna;
-    pacman->posicaoAtual->linha = posicao->linha;
+    if(pacman == NULL){
+        printf("Erro na alocação do pacman\n");
+        exit(1);
+    }
+    
+    if(posicao == NULL){
+        printf("Erro na alocação da posicao do pacman");
+        exit(1);
+    }
+
+    pacman->posicaoAtual = posicao;
+    pacman->estaVivo = 1;
 
     return pacman;
 }
@@ -26,8 +36,9 @@ tPacman* CriaPacman(tPosicao* posicao){
 tPacman* ClonaPacman(tPacman* pacman){
     tPacman* pacmanClone = calloc(1, sizeof(tPacman));
 
-    pacmanClone->posicaoAtual->coluna = pacman->posicaoAtual->coluna;
-    pacmanClone->posicaoAtual->linha = pacman->posicaoAtual->linha;
+    pacmanClone->posicaoAtual = pacman->posicaoAtual;
+
+    pacmanClone->estaVivo = pacman->estaVivo;
 
     return pacmanClone;
 }
@@ -42,7 +53,7 @@ tPacman* ClonaPacman(tPacman* pacman){
 tMovimento** ClonaHistoricoDeMovimentosSignificativosPacman(tPacman* pacman){
     tMovimento** cloneMovimento = NULL;
 
-
+    
 
     return cloneMovimento;
 }

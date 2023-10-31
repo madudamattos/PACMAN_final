@@ -6,7 +6,7 @@
 #include "tTunel.h"
 #include "tMapa.h"
 #include "tMovimento.h"
-// #include "tPacman.h"
+#include "tPacman.h"
 
 int main(int argc, char *argv[]){
     char *caminhoConfig = argv[1];
@@ -18,16 +18,16 @@ int main(int argc, char *argv[]){
 
     tMapa *mapa = CriaMapa(caminhoConfig);
 
-    // int i, j;
-    // int L = ObtemNumeroLinhasMapa(mapa);
-    // int C = ObtemNumeroColunasMapa(mapa);
+    int i, j;
+    int L = ObtemNumeroLinhasMapa(mapa);
+    int C = ObtemNumeroColunasMapa(mapa);
 
-    // for(i=0; i<L; i++){
-    //     for(j=0; j<C; i++){
-    //         printf("%c", mapa->grid[i][j]);
-    //     }
-    //     printf("\n");
-    // }
+    for(i=0; i<L; i++){
+        for(j=0; j<C; i++){
+            printf("%c", mapa->grid[i][j]);
+        }
+        printf("\n");
+    }
 
     return 0;
 }

@@ -27,6 +27,7 @@ tMapa* CriaMapa(const char* caminhoConfig){
    sprintf(caminhoMapa, "%s/mapa.txt", caminhoConfig);
 
    pMapa = fopen(caminhoMapa, "r");
+
    if (pMapa == NULL) {
       printf("Erro na abertura do arquivo de mapa\n");
       exit(1);
@@ -34,11 +35,21 @@ tMapa* CriaMapa(const char* caminhoConfig){
 
    fscanf(pMapa, "%d%*c", &mapa->nMaximoMovimentos);
 
-   mapa->grid = (char**)malloc(sizeof(char*));
+   mapa->grid = (char**)calloc(1,sizeof(char*));
+
+   if (mapa->grid == NULL) {
+      printf("Erro na alocação do grid\n");
+      exit(1);
+   }
 
    int tamLinha = 0, tamColuna = 0;
 
-   mapa->grid[tamLinha] = (char*)malloc(sizeof(char));
+   mapa->grid[tamLinha] = (char*)calloc(1,sizeof(char));
+
+   if (mapa->grid[tamLinha] == NULL) {
+      printf("Erro na alocação do grid\n");
+      exit(1);
+   }
 
    while (1) {
 
@@ -56,17 +67,18 @@ tMapa* CriaMapa(const char* caminhoConfig){
             exit(1);
          }
 
-            fscanf(pMapa, "%c", &caractere);
+         fscanf(pMapa, "%c", &caractere);
       }
+
+      if(caractere == '\n') tamLinha++;
 
       if (caractere == EOF) {
          mapa->nColunas = tamColuna;
-         mapa->nLinhas = tamLinha + 1; // Incrementado para contar a última linha.
+         mapa->nLinhas = tamLinha; // Incrementado para contar a última linha.
          break;
       }
 
       tamColuna = 0;
-      tamLinha++;
 
       mapa->grid = (char**)realloc(mapa->grid, (tamLinha + 1) * sizeof(char*));
       
@@ -77,9 +89,9 @@ tMapa* CriaMapa(const char* caminhoConfig){
 
    }
 
-    fclose(pMapa);
+   fclose(pMapa);
 
-    return mapa;
+   return mapa;
 }
 
 
@@ -112,7 +124,7 @@ tPosicao* ObtemPosicaoItemMapa(tMapa* mapa, char item){
  * \param mapa mapa
  */
 tTunel* ObtemTunelMapa(tMapa* mapa){
-   tTunel* tunel;
+   tTunel* tunel = NULL;
    int i, j;
    
    tunel->acesso1 = NULL;
@@ -161,7 +173,7 @@ int ObtemNumeroColunasMapa(tMapa* mapa){
  */
 int ObtemQuantidadeFrutasIniciaisMapa(tMapa* mapa){
    int i, j;
-   tPosicao* comida;
+   tPosicao* comida = NULL;
    int totalComida = 0;
 
    for (i=0; i< mapa->nLinhas;i++){
@@ -245,6 +257,8 @@ bool PossuiTunelMapa(tMapa* mapa){
    if(tunel == 0){
       return false;
    }
+
+   return false;
 }
 
 /**
@@ -253,8 +267,12 @@ bool PossuiTunelMapa(tMapa* mapa){
  * \param posicao posicao a ser verificada
  */
 bool AcessouTunelMapa(tMapa* mapa, tPosicao* posicao){
-   
-   return false;
+   if(EntrouTunel(mapa->tunel, posicao)){
+      return true;
+   }
+   else{
+      return false;
+   }
 }
 
 /**
@@ -263,7 +281,7 @@ bool AcessouTunelMapa(tMapa* mapa, tPosicao* posicao){
  * \param posicao posicao que vai entrar no túnel
  */
 void EntraTunelMapa(tMapa* mapa, tPosicao* posicao){
-   
+   LevaFinalTunel(mapa->tunel, posicao);
 }
 
 /**

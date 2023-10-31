@@ -62,12 +62,11 @@ void LevaFinalTunel(tTunel* tunel, tPosicao* posicao){
         posicao->coluna = tunel->acesso1->coluna;
     }
 }
-/**
- * Caso o túnel seja diferente de NULL, libera o espaço alocado 
- * para a estrutura tTunel.
- * \param tunel tunel
- */
+
 void DesalocaTunel(tTunel* tunel){
+
+    if(tunel == NULL) return;
+
     DesalocaPosicao(tunel->acesso1);
     DesalocaPosicao(tunel->acesso2);
     free(tunel);
