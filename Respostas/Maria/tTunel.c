@@ -43,7 +43,6 @@ bool EntrouTunel(tTunel* tunel, tPosicao* posicao){
     else{
         return false;
     }
-
 }
 
 /**

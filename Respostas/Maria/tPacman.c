@@ -39,7 +39,13 @@ tPacman* ClonaPacman(tPacman* pacman){
  * Retorna um ponteiro para o tMovimento** clone.
  * \param pacman pacman
  */
-tMovimento** ClonaHistoricoDeMovimentosSignificativosPacman(tPacman* pacman);
+tMovimento** ClonaHistoricoDeMovimentosSignificativosPacman(tPacman* pacman){
+    tMovimento** cloneMovimento = NULL;
+
+
+
+    return cloneMovimento;
+}
 
 /**
  * Retorna a posição do pacman.
@@ -126,7 +132,7 @@ void SalvaTrilhaPacman(tPacman* pacman){
  * \param acao a ação do movimento
  */
 void InsereNovoMovimentoSignificativoPacman(tPacman* pacman, COMANDO comando, const char* acao){
-
+    
 }
 
 /**
