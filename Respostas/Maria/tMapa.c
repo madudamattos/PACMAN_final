@@ -13,41 +13,138 @@
  * \param caminho caminho do arquivo com as configurações do mapa
  */
 tMapa* CriaMapa(const char* caminhoConfig){
-   tMapa* mapa = NULL;
-   char caminhoMapa[100];
-   FILE *pMapa =  NULL;
-   char caractere = '\0';
+   // tMapa* mapa = NULL;
+   // char caminhoMapa[100];
+   // FILE *pMapa =  NULL;
+   // char caractere = '\0';
 
-   sprintf(caminhoMapa, "%s/mapa.txt", caminhoConfig);
+   // sprintf(caminhoMapa, "%s/mapa.txt", caminhoConfig);
 
-   pMapa = fopen(caminhoMapa, "r");
+   // pMapa = fopen(caminhoMapa, "r");
 
-   fscanf(pMapa, "%d%*c", &mapa->nMaximoMovimentos);
+   // fscanf(pMapa, "%d%*c", &mapa->nMaximoMovimentos);
    
-   mapa = (char*) malloc(sizeof(char*));
+   // mapa->grid = (char**) malloc(sizeof(char*));
+   // if(mapa->grid == NULL){
+   //    printf("Erro na alocação do grid\n");
+   //    exit(1);
+   // }
 
-   while(caractere != EOF){
-      fscanf(pMapa,"%c", &caractere);
-      if(caractere == '\n'){
+   // int tamLinha = 1, tamColuna = 1;
 
-      }
-   }
+   // mapa->grid[tamLinha-1] = (char*) malloc(sizeof(char));
+   // if(mapa->grid[tamLinha-1] == NULL){
+   //    printf("Erro na alocação da primeira coluna do mapa\n");
+   //    exit(1);
+   // }
+
+   // while(1){
+
+   //    fscanf(pMapa,"%c", &caractere);
+
+   //    while(caractere != '\n' && caractere != EOF){
+         
+   //       mapa->grid[tamLinha-1][tamColuna-1] = caractere;
+         
+   //       tamColuna++;
+         
+   //       mapa->grid[tamLinha-1] = realloc(mapa->grid[tamLinha-1], tamColuna*sizeof(char));
+
+   //       if(mapa->grid[tamLinha-1] == NULL){
+   //          printf("Erro na alocação das colunas do mapa\n");
+   //          exit(1);
+   //       }
+         
+   //       fscanf(pMapa,"%c", &caractere);
+      
+   //    }
+
+   //    if(caractere == EOF){
+   //       mapa->nColunas = tamColuna;
+   //       mapa->nColunas = tamLinha;
+   //       break;
+   //    }
+
+   //    tamColuna = 0;
+
+   //    tamLinha++;
+
+   //    mapa->grid = realloc(mapa->grid, tamLinha*sizeof(char*));
+
+   //    if(mapa->grid == NULL){
+   //       printf("Erro na alocação das linhas do mapa\n");
+   //       exit(1);
+   //    }
+
+   // }
     
-//    for(i=0; i<game.map.sizeI; i++){
-//      for(j=0; j<game.map.sizeJ; j++){
-//          fscanf(pMapa, "%c", &map.board[i][j]);
-//       }
-//       fscanf(pMapa, "%*c");
-//    }
+   // fclose(pMapa);
 
-   fclose(pMapa);
+    tMapa* mapa = (tMapa*)malloc(sizeof(tMapa));
+    if (mapa == NULL) {
+        printf("Erro na alocação de mapa\n");
+        exit(1);
+    }
 
-//    map.sizeI = game.map.sizeI;
-//    map.sizeJ = game.map.sizeJ;
+    char caminhoMapa[100];
+    FILE *pMapa = NULL;
+    char caractere = '\0';
 
+    sprintf(caminhoMapa, "%s/mapa.txt", caminhoConfig);
 
-   return mapa;
+    pMapa = fopen(caminhoMapa, "r");
+    if (pMapa == NULL) {
+        printf("Erro na abertura do arquivo de mapa\n");
+        exit(1);
+    }
+
+    fscanf(pMapa, "%d%*c", &mapa->nMaximoMovimentos);
+
+    mapa->grid = (char**)malloc(sizeof(char*));
+
+    int tamLinha = 0, tamColuna = 0;
+
+    mapa->grid[tamLinha] = (char*)malloc(sizeof(char));
+
+    while (1) {
+        fscanf(pMapa, "%c", &caractere);
+
+        while (caractere != '\n' && caractere != EOF) {
+            mapa->grid[tamLinha][tamColuna] = caractere;
+
+            tamColuna++;
+
+            mapa->grid[tamLinha] = (char*)realloc(mapa->grid[tamLinha], (tamColuna + 1) * sizeof(char));
+
+            if (mapa->grid[tamLinha] == NULL) {
+                printf("Erro na alocação das colunas do mapa\n");
+                exit(1);
+            }
+
+            fscanf(pMapa, "%c", &caractere);
+        }
+
+        if (caractere == EOF) {
+            mapa->nColunas = tamColuna;
+            mapa->nLinhas = tamLinha + 1; // Incrementado para contar a última linha.
+            break;
+        }
+
+        tamColuna = 0;
+        tamLinha++;
+
+        mapa->grid = (char**)realloc(mapa->grid, (tamLinha + 1) * sizeof(char*));
+        if (mapa->grid == NULL) {
+            printf("Erro na alocação das linhas do mapa\n");
+            exit(1);
+        }
+    }
+
+    fclose(pMapa);
+
+    return mapa;
 }
+
 
 /**
  * Obtem a posição de um item do mapa.
