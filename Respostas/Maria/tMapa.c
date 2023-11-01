@@ -46,7 +46,6 @@ tMapa* CriaMapa(const char* caminhoConfig) {
          
       }
 
-      //printf("\n");
       qtdLinhas++;
       caractere = '\0';
    }
@@ -54,7 +53,7 @@ tMapa* CriaMapa(const char* caminhoConfig) {
    qtdLinhas--;
 
 
-   printf("%d %d\n", qtdLinhas, qtdColunas);
+   //printf("%d %d\n", qtdLinhas, qtdColunas);
 
    mapa->nColunas = qtdColunas;
    mapa->nLinhas = qtdLinhas;
@@ -95,12 +94,7 @@ tMapa* CriaMapa(const char* caminhoConfig) {
    //     printf("\n");
    // }
 
-   //printf("acabou t mapa\n");
-
    fclose(pMapa);
-
-
-   //printf("%d %d", mapa->nColunas, mapa->nLinhas);
 
    return mapa;
 }
@@ -117,17 +111,21 @@ tMapa* CriaMapa(const char* caminhoConfig) {
 tPosicao* ObtemPosicaoItemMapa(tMapa* mapa, char item){
    tPosicao* posicao = NULL;
    int i,j;
+   int L = ObtemNumeroLinhasMapa(mapa);
+   int C = ObtemNumeroColunasMapa(mapa);
 
-   for(i=0; i< mapa->nLinhas; i++){
-      for(j=0; j<mapa->nColunas; j++){
+   if(mapa == NULL) return NULL;
+
+   for(i=0; i< L; i++){
+      for(j=0; j<C; j++){
          if(mapa->grid[i][j] == item){
-            posicao->linha = i;
-            posicao->coluna = j;
+            posicao = CriaPosicao(i,j);
+            return posicao;
          }
       }
    }
 
-   return posicao;
+   return NULL;
 }
 
 /**
@@ -301,5 +299,18 @@ void EntraTunelMapa(tMapa* mapa, tPosicao* posicao){
  * \param mapa mapa
  */
 void DesalocaMapa(tMapa* mapa){
+   int i, j;
 
+   if(mapa == NULL) return;
+
+   int L= ObtemNumeroLinhasMapa(mapa);
+
+   for(i=0; i<L; i++){
+      free(mapa->grid[i]);  
+   }
+   free(mapa->grid);
+
+   DesalocaTunel(mapa->tunel);
+
+   free(mapa);
 }

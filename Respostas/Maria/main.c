@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 
     tMapa *mapa = CriaMapa(caminhoConfig);
 
-    printf("%d", mapa->nMaximoMovimentos);
+    printf("%d\n", mapa->nMaximoMovimentos);
 
     int i, j;
     int L = ObtemNumeroLinhasMapa(mapa);
