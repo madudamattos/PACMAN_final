@@ -18,16 +18,18 @@ int main(int argc, char *argv[]){
 
     tMapa *mapa = CriaMapa(caminhoConfig);
 
-    int i, j;
-    int L = ObtemNumeroLinhasMapa(mapa);
-    int C = ObtemNumeroColunasMapa(mapa);
+    printf("%d", mapa->nMaximoMovimentos);
 
-    for(i=0; i<L; i++){
-        for(j=0; j<C; i++){
-            printf("%c", mapa->grid[i][j]);
-        }
-        printf("\n");
-    }
+    //int i, j;
+    //int L = ObtemNumeroLinhasMapa(mapa);
+    //int C = ObtemNumeroColunasMapa(mapa);
+
+    //for(i=0; i<L; i++){
+    //    for(j=0; j<C; i++){
+    //        printf("%c", mapa->grid[i][j]);
+    //    }
+    //    printf("\n");
+    //}
 
     return 0;
 }
