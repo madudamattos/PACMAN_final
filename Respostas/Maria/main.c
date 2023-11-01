@@ -24,6 +24,8 @@ int main(int argc, char *argv[]){
     int L = ObtemNumeroLinhasMapa(mapa);
     int C = ObtemNumeroColunasMapa(mapa);
 
+    printf("%d %d", L, C);
+
     for(i=0; i<L; i++){
        for(j=0; j<C; i++){
            printf("%c", mapa->grid[i][j]);

@@ -43,23 +43,21 @@ tMapa* CriaMapa(const char* caminhoConfig) {
 
       while(caractere != '\n'){
          
+         if(qtdLinhas<1) qtdColunas++;
+         
          if(feof(pMapa)) break; 
 
          fscanf(pMapa, "%c", &caractere);
          
-         qtdColunas++;
+         
       }
 
       //printf("\n");
       qtdLinhas++;
       caractere = '\0';
    }
-   
-   qtdColunas = qtdColunas/qtdLinhas;
 
-   qtdLinhas--;
-
-   //printf("%d %d", qtdColunas, qtdLinhas);
+   printf("%d %d", qtdColunas, qtdLinhas);
 
    //alocacao do grid
 
@@ -78,9 +76,7 @@ tMapa* CriaMapa(const char* caminhoConfig) {
 
    pMapa = fopen(caminhoMapa, "r");
 
-   fscanf(pMapa, "%c%*c", &caractere);
-
-   printf("%c", caractere);
+   fscanf(pMapa, "%*d%*c");
 
    //leitura do grid;
 
@@ -90,6 +86,14 @@ tMapa* CriaMapa(const char* caminhoConfig) {
       }
       fscanf(pMapa, "%*c");
    }
+   
+   //teste pra printar o mapa
+   // for(i=0; i<qtdLinhas; i++){
+   //     for(j=0; j<qtdColunas; j++){
+   //         printf("%c", mapa->grid[i][j]);
+   //     }
+   //     printf("\n");
+   // }
 
    fclose(pMapa);
 
