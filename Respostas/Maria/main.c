@@ -24,10 +24,10 @@ int main(int argc, char *argv[]){
     int L = ObtemNumeroLinhasMapa(mapa);
     int C = ObtemNumeroColunasMapa(mapa);
 
-    printf("%d %d", L, C);
+    //printf("%d %d", mapa->nLinhas,  mapa->nColunas);
 
     for(i=0; i<L; i++){
-       for(j=0; j<C; i++){
+       for(j=0; j<C; j++){
            printf("%c", mapa->grid[i][j]);
        }
        printf("\n");

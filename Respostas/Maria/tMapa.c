@@ -6,12 +6,6 @@
 #include "tTunel.h"
 #include "tMapa.h"
 
-/**
- * Dado o arquivo de configurações, cria o mapa dinamicamente e 
- * retorna um ponteiro para o tipo tMapa.
- * Caso o arquivo de configurações não exista, retorna NULL.
- * \param caminho caminho do arquivo com as configurações do mapa
- */
 tMapa* CriaMapa(const char* caminhoConfig) {
    tMapa* mapa = (tMapa*)calloc(1, sizeof(tMapa));
 
@@ -57,7 +51,13 @@ tMapa* CriaMapa(const char* caminhoConfig) {
       caractere = '\0';
    }
 
-   printf("%d %d", qtdColunas, qtdLinhas);
+   qtdLinhas--;
+
+
+   printf("%d %d\n", qtdLinhas, qtdColunas);
+
+   mapa->nColunas = qtdColunas;
+   mapa->nLinhas = qtdLinhas;
 
    //alocacao do grid
 
@@ -95,7 +95,12 @@ tMapa* CriaMapa(const char* caminhoConfig) {
    //     printf("\n");
    // }
 
+   //printf("acabou t mapa\n");
+
    fclose(pMapa);
+
+
+   //printf("%d %d", mapa->nColunas, mapa->nLinhas);
 
    return mapa;
 }
