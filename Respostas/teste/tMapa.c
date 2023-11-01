@@ -35,105 +35,104 @@ tMapa* CriaMapa(const char* caminhoConfig){
 
    fscanf(pMapa, "%d%*c", &mapa->nMaximoMovimentos);
 
-   //mapa->grid = (char**)calloc(1,sizeof(char*));
+   mapa->grid = (char**)calloc(1,sizeof(char*));
 
-   //if (mapa->grid == NULL) {
-   //   printf("Erro na alocação do grid\n");
-   //   exit(1);
-   //}
+   if (mapa->grid == NULL) {
+     printf("Erro na alocação do grid\n");
+     exit(1);
+   }
 
    int qtdLinhas = 0, qtdColunas = 0;
 
-   //mapa->grid[qtdLinhas] = (char*)calloc(1,sizeof(char));
+   mapa->grid[qtdLinhas] = (char*)calloc(1,sizeof(char));
 
-   //if (mapa->grid[qtdLinhas] == NULL) {
-   //   printf("Erro na alocação do grid\n");
-   //   exit(1);
-   //}
-
-   //while (1) {
-
-   //   fscanf(pMapa, "%c", &caractere);
-
-   //   while (caractere != '\n' && caractere != EOF) {
-   //      mapa->grid[qtdLinhas][qtdColunas] = caractere;
-
-   //      qtdColunas++;
-
-   //      mapa->grid[qtdLinhas] = (char*)realloc(mapa->grid[qtdLinhas], (qtdColunas + 1) * sizeof(char));
-
-   //      if (mapa->grid[qtdLinhas] == NULL) {
-   //         printf("Erro na alocação das colunas do mapa\n");
-   //         exit(1);
-   //      }
-
-   //      fscanf(pMapa, "%c", &252caractere);
-   //   }
-
-   //   if(caractere == '\n') qtdLinhas++;
-
-   //   if (caractere == EOF) {
-   //      mapa->nColunas = qtdColunas;
-   //      mapa->nLinhas = qtdLinhas; // Incrementado para contar a última linha.
-   //      break;
-   //   }
-
-   //   qtdColunas = 0;
-
-   //   mapa->grid = (char**)realloc(mapa->grid, (qtdLinhas + 1) * sizeof(char*));
-      
-   //   if (mapa->grid == NULL) {
-   //      printf("Erro na alocação das linhas do mapa\n");
-   //      exit(1);
-   //   }
-
-   //}
-
-   int i, j;
-
-   //printf("%d", mapa->nMaximoMovimentos);
-   //conta qtd de linhas e coluans primeiro   
-   while(1){
-
-      printf("%d", mapa->nMaximoMovimentos);
-      
-      fscanf(pMapa, "%c", &caractere);
-      
-      //printf("1");
-
-      printf("%c", caractere);
-
-      if(caractere == EOF) break;
-
-      if(caractere != '\n'){
-         qtdColunas++;
-      }
-
-      if(caractere == '\n'){
-         qtdLinhas++;
-      }
-
-      printf("2");
+   if (mapa->grid[qtdLinhas] == NULL) {
+     printf("Erro na alocação do grid\n");
+     exit(1);
    }
 
-   qtdColunas = qtdColunas/qtdLinhas;
+   while (1) {
 
-   mapa->grid = calloc(1, qtdLinhas*qtdColunas*sizeof(char));
+     fscanf(pMapa, "%c", &caractere);
 
-   if(mapa->grid == NULL){
-      printf("Erro na alocacao do grid\n");
-      exit(1);
-   } 
+     while (caractere != '\n' && caractere != EOF) {
+        mapa->grid[qtdLinhas][qtdColunas] = caractere;
 
-   //fscanf(pMapa, "%d%*c", &mapa->nMaximoMovimentos);
+        qtdColunas++;
+
+        mapa->grid[qtdLinhas] = (char*)realloc(mapa->grid[qtdLinhas], (qtdColunas + 1) * sizeof(char));
+
+        if (mapa->grid[qtdLinhas] == NULL) {
+           printf("Erro na alocação das colunas do mapa\n");
+           exit(1);
+        }
+
+        fscanf(pMapa, "%c", &caractere);
+     }
+
+     if(caractere == '\n') qtdLinhas++;
+
+     if (caractere == EOF) {
+        mapa->nColunas = qtdColunas;
+        mapa->nLinhas = qtdLinhas; // Incrementado para contar a última linha.
+        break;
+     }
+
+     qtdColunas = 0;
+
+     mapa->grid = (char**)realloc(mapa->grid, (qtdLinhas + 1) * sizeof(char*));
+      
+     if (mapa->grid == NULL) {
+        printf("Erro na alocação das linhas do mapa\n");
+        exit(1);
+     }
+
+   }
+
+   // int i, j;
+
+   // //printf("%d", mapa->nMaximoMovimentos);
+   // //conta qtd de linhas e coluans primeiro   
+   // while(1){
+
+   //    printf("%d", mapa->nMaximoMovimentos);
+      
+   //    fscanf(pMapa, "%c", &caractere);
+      
+   //    //printf("1");
+
+   //    printf("%c", caractere);
+
+   //    if(caractere == EOF) break;
+
+   //    if(caractere != '\n'){
+   //       qtdColunas++;
+   //    }
+
+   //    if(caractere == '\n'){
+   //       qtdLinhas++;
+   //    }
+
+   //    printf("2");
+   // }
+
+   // qtdColunas = qtdColunas/qtdLinhas;
+
+   // mapa->grid = calloc(1, qtdLinhas*qtdColunas*sizeof(char));
+
+   // if(mapa->grid == NULL){
+   //    printf("Erro na alocacao do grid\n");
+   //    exit(1);
+   // } 
+
+   // //fscanf(pMapa, "%d%*c", &mapa->nMaximoMovimentos);
    
-   for(i=0; i<qtdLinhas; i++){
-      for(j=0; j<qtdColunas; j++){
-         fscanf(pMapa, "%c", &caractere);
-         mapa->grid[i][j] = caractere;
-      }
-   }
-
+   // for(i=0; i<qtdLinhas; i++){
+   //    for(j=0; j<qtdColunas; j++){
+   //       fscanf(pMapa, "%c", &caractere);
+   //       mapa->grid[i][j] = caractere;
+   //    }
+   // }
 
    fclose(pMapa);
 
