@@ -15,17 +15,15 @@ tTunel* CriaTunel(int linhaAcesso1, int colunaAcesso1, int linhaAcesso2, int col
         exit(1);
     }
 
-    tunel->acesso1->linha = linhaAcesso1;
-    tunel->acesso1->coluna = colunaAcesso1;
-    tunel->acesso2->linha = linhaAcesso2;
-    tunel->acesso2->coluna = colunaAcesso2;
+    tunel->acesso1 = CriaPosicao(linhaAcesso1, colunaAcesso1);
+    tunel->acesso2 = CriaPosicao(linhaAcesso2, colunaAcesso2);
 
     return tunel;
 }
 
 bool EntrouTunel(tTunel* tunel, tPosicao* posicao){
 
-    if(posicao == tunel->acesso1 || posicao == tunel->acesso2){
+    if((posicao->linha == tunel->acesso1->linha && posicao->coluna == tunel->acesso1->coluna) || (posicao->linha == tunel->acesso2->linha && posicao->coluna == tunel->acesso2->coluna)){
         return true;
     }
     else{
@@ -36,11 +34,14 @@ bool EntrouTunel(tTunel* tunel, tPosicao* posicao){
 void LevaFinalTunel(tTunel* tunel, tPosicao* posicao){
 
     if(EntrouTunel(tunel, posicao)){
-        if(posicao == tunel->acesso1){
-            posicao = tunel->acesso2;
+
+        if(posicao->linha == tunel->acesso1->linha && posicao->coluna == tunel->acesso1->coluna){
+            posicao->linha = tunel->acesso2->linha;
+            posicao->coluna = tunel->acesso2->coluna;
         }
-        else if(posicao == tunel->acesso2){
-            posicao = tunel->acesso1;
+        else if(posicao->linha == tunel->acesso2->linha && posicao->coluna == tunel->acesso2->coluna){
+            posicao->linha = tunel->acesso1->linha;
+            posicao->coluna = tunel->acesso1->coluna;
         }
     }
    

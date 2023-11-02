@@ -15,12 +15,12 @@ tPacman* CriaPacman(tPosicao* posicao){
 
     if(pacman == NULL){
         printf("Erro na alocação do pacman\n");
-        exit(1);
+        return NULL;
     }
     
     if(posicao == NULL){
-        printf("Erro na alocação da posicao do pacman");
-        exit(1);
+        printf("Posicao do pacman invalida\n");
+        return NULL;
     }
 
     pacman->posicaoAtual = posicao;
@@ -67,7 +67,7 @@ tPosicao* ObtemPosicaoPacman(tPacman* pacman){
     tPosicao* posicaoPacman = NULL;
 
     posicaoPacman->linha = pacman->posicaoAtual->linha;
-    posicaoPacman->coluna = pacman-> posicaoAtual->linha;
+    posicaoPacman->coluna = pacman-> posicaoAtual->coluna;
 
     return posicaoPacman;
 }
@@ -96,7 +96,7 @@ int EstaVivoPacman(tPacman* pacman){
  * \param comando o comando para onde irá o pacman
  */
 void MovePacman(tPacman* pacman, tMapa* mapa, COMANDO comando){
-
+    return;
 }
 
 /**
@@ -109,7 +109,7 @@ void MovePacman(tPacman* pacman, tMapa* mapa, COMANDO comando){
  * \param nColunas número de colunas da trilha
  */
 void CriaTrilhaPacman(tPacman* pacman, int nLinhas, int nColunas){
-
+    return;
 }
 
 /**
