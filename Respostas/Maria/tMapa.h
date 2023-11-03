@@ -160,3 +160,22 @@ void EntraTunelMapa(tMapa* mapa, tPosicao* posicao);
 void DesalocaMapa(tMapa* mapa);
 
 #endif
+
+   // int i, j;
+   // int L = ObtemNumeroLinhasMapa(mapa);
+   // int C = ObtemNumeroColunasMapa(mapa);
+   // tPosicao* comida = NULL;
+   // int totalComida = 0;
+
+
+   // for (i=0; i<L;i++){
+   //    for(j=0;j<C; j++){
+   //       comida = CriaPosicao(i, j);
+   //       if(EncontrouComidaMapa(mapa, comida)){
+   //          totalComida++;
+   //       }
+   //       DesalocaPosicao(comida);
+   //    }
+   // }
+
+   // return totalComida;

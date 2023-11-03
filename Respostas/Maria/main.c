@@ -16,22 +16,10 @@ int main(int argc, char *argv[]){
         return 0;
     }
 
+    printf("antes do cria mapa");
     tMapa *mapa = CriaMapa(caminhoConfig);
 
-    printf("%d\n", mapa->nMaximoMovimentos);
-
-    int i, j;
-    int L = ObtemNumeroLinhasMapa(mapa);
-    int C = ObtemNumeroColunasMapa(mapa);
-
-    //printf("%d %d", mapa->nLinhas,  mapa->nColunas);
-
-    for(i=0; i<L; i++){
-       for(j=0; j<C; j++){
-           printf("%c", mapa->grid[i][j]);
-       }
-       printf("\n");
-    }
+    DesalocaMapa(mapa);
 
     return 0;
 }
