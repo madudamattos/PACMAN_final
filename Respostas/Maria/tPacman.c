@@ -28,6 +28,8 @@ tPacman* CriaPacman(tPosicao* posicao){
     }
 
     pacman->trilha = NULL;
+    // CriaTrilhaPacman(pacman, pacman->nLinhasTrilha, pacman->nColunasTrilha);
+    // AtualizaTrilhaPacman(pacman);
 
     return pacman;
 }
@@ -157,10 +159,15 @@ void MovePacman(tPacman* pacman, tMapa* mapa, COMANDO comando){
     }
 
     //atualiza a posicao atual do pacman para a proxima posicao
+    
+    DesalocaPosicao(pacman->posicaoAtual);
+
     pacman->posicaoAtual = ClonaPosicao(proximaPosicao);
     
     DesalocaPosicao(proximaPosicao);
-
+    
+    AtualizaTrilhaPacman(pacman);
+    
     return;
 }
 
@@ -178,12 +185,15 @@ void CriaTrilhaPacman(tPacman* pacman, int nLinhas, int nColunas){
 
     if(pacman->trilha != NULL) return;
 
+    pacman->nLinhasTrilha = nLinhas;
+    pacman->nColunasTrilha = nColunas;
+
     pacman->trilha = (int **) calloc(nLinhas, sizeof(int*));
-    
+
     for(i=0; i<nLinhas; i++){
         pacman->trilha[i] = (int *) calloc(nColunas, sizeof(int));
     } 
-
+ 
     for(i=0; i<nLinhas; i++){
         for(j=0; j<nColunas; j++){
             pacman->trilha[i][j] = -1;
@@ -242,6 +252,7 @@ void SalvaTrilhaPacman(tPacman* pacman){
         fprintf(pTrilha, "\n");
     }
 
+    // fprintf(pTrilha, "nada acontece");
     fclose(pTrilha);
 }
 

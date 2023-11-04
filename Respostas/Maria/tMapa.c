@@ -122,7 +122,6 @@ tMapa* CriaMapa(const char* caminhoConfig) {
    return mapa;
 }
 
-//acho que ta funcionando mas n sei se ta 10%
 tPosicao* ObtemPosicaoItemMapa(tMapa* mapa, char item){
    tPosicao* posicao = NULL;
    int i,j;
@@ -143,12 +142,10 @@ tPosicao* ObtemPosicaoItemMapa(tMapa* mapa, char item){
    return NULL;
 }
 
-//NAO TA FUNCIONANDO
 tTunel* ObtemTunelMapa(tMapa* mapa){
    return mapa->tunel;
 }
 
-//funcionando mas n sei se ta 100%
 char ObtemItemMapa(tMapa* mapa, tPosicao* posicao){
    char item = '\0';
    int Lp = ObtemLinhaPosicao(posicao);
@@ -217,15 +214,6 @@ bool EncontrouParedeMapa(tMapa* mapa, tPosicao* posicao){
    return false;
 }
 
-/**
- * Dado o mapa, uma posição e um item, atualiza a posição do mapa com aquele item.
- * Caso o mapa ou o grid do mapa seja NULL, ou a posição esteja fora dos limites do mapa,
- * retorna falso. 
- * Se conseguiu atualizar o item com sucesso, retorna verdadeiro.
- * \param mapa mapa
- * \param posicao posicao do item
- * \param item posicao item que vai atualizar o mapa
- */
 bool AtualizaItemMapa(tMapa* mapa, tPosicao* posicao, char item){
    int Lp = ObtemLinhaPosicao(posicao);
    int Cp = ObtemColunaPosicao(posicao);
