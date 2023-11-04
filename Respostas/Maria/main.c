@@ -16,10 +16,13 @@ int main(int argc, char *argv[]){
         return 0;
     }
 
-    printf("antes do cria mapa");
-    tMapa *mapa = CriaMapa(caminhoConfig);
+    tPosicao *posicao = CriaPosicao(1, 2);
 
-    DesalocaMapa(mapa);
+    printf("antes pacman\n");
+
+    tPacman *pacman = CriaPacman(posicao);
+
+    printf("depois pacman\n");
 
     return 0;
 }

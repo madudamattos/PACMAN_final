@@ -33,7 +33,8 @@ tPosicao* ClonaPosicao(tPosicao* posicao){
         printf("Erro na alocacao de memória da posicao!");
     }
 
-    *posicaoClone = *posicao;
+    posicaoClone->linha = posicao->linha;
+    posicaoClone->coluna = posicao->coluna;
 
     return posicaoClone;
 }
