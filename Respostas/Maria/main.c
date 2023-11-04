@@ -8,6 +8,12 @@
 #include "tMovimento.h"
 #include "tPacman.h"
 
+typedef struct{
+    char tipo;
+    char movimento;
+    int status;
+    tPosicao posicaoFantasma;
+} tGhost;
 
 void ImprimeMapa(tMapa *mapa, tPacman *pacman, FILE *pArquivo);
 
@@ -160,111 +166,111 @@ void GeraArquivoResumo(tPacman *pacman){
     return;
 }
 
-typedef struct{
-    COMANDO MOVIMENTO; 
-    int frutas;
-    int colisoes;
-    int usos;
-    int posicao;
-} tRanking;
+// typedef struct{
+//     COMANDO MOVIMENTO; 
+//     int frutas;
+//     int colisoes;
+//     int usos;
+//     int posicao;
+// } tRanking;
 
-void generateRankingFile(tPacman pacman){
-    FILE *pRank = NULL;
-    // char arquivoRanking[100];
-    // int i, j, k;
-    // int best_score, best_j;
-    // int class[4];
-    // int best=-1;
+// void generateRankingFile(tPacman pacman){
+//     FILE *pRank = NULL;
+//     char arquivoRanking[100];
+//     int i, j, k;
+//     int best_score, best_j;
+//     int class[4];
+//     int best=-1;
 
-    // sprintf(arquivoRanking, "ranking.txt");
+//     sprintf(arquivoRanking, "ranking.txt");
 
-    // pRank = fopen(arquivoRanking, "w");
+//     pRank = fopen(arquivoRanking, "w");
     
-    // game.rank[0].type = 'w';
-    // game.rank[1].type = 'a';
-    // game.rank[2].type = 's';
-    // game.rank[3].type = 'd';
+//     game.rank[0].type = 'w';
+//     game.rank[1].type = 'a';
+//     game.rank[2].type = 's';
+//     game.rank[3].type = 'd';
 
-    // //zera todos os movimentos no começo
-    // for(i=0;i<4;i++){
-    //     game.rank[i].frutas=0;
-    //     game.rank[i].colisoes=0;
-    //     game.rank[i].usos=0;
-    //     game.rank[i].posicao= -1;
-    //     class[i] = -1;
-    // }
+//     //zera todos os movimentos no começo
+//     for(i=0;i<4;i++){
+//         game.rank[i].frutas=0;
+//         game.rank[i].colisoes=0;
+//         game.rank[i].usos=0;
+//         game.rank[i].posicao= -1;
+//         class[i] = -1;
+//     }
 
-    // //inicializa todos os movimentos
-    // for(j=1;j<=game.pacman.moveCounter;j++){
-    //     for(i=0;i<4;i++){
-    //         if(game.pacman.moves[j].moveInput == game.rank[i].type){
-    //             game.rank[i].usos++;
-    //             if(game.pacman.moves[j].moveResult == GOTfrutas){
-    //                 game.rank[i].frutas++;
-    //             }
-    //             else if(game.pacman.moves[j].moveResult == WALLCOLISION){
-    //                 game.rank[i].colisoes++;
-    //             }
-    //         }
-    //     }
-    // }
+//     //inicializa todos os movimentos
+//     for(j=1;j<=game.pacman.moveCounter;j++){
+//         for(i=0;i<4;i++){
+//             if(game.pacman.moves[j].moveInput == game.rank[i].type){
+//                 game.rank[i].usos++;
+//                 if(game.pacman.moves[j].moveResult == GOTfrutas){
+//                     game.rank[i].frutas++;
+//                 }
+//                 else if(game.pacman.moves[j].moveResult == WALLCOLISION){
+//                     game.rank[i].colisoes++;
+//                 }
+//             }
+//         }
+//     }
 
-    // //aqui começa a logica de organização do ranking/////////////////
+//     //aqui começa a logica de organização do ranking/////////////////
 
-    // // acha o maior rank e coloca no 0, ate fechar o vetor
-    // for(i=0;i<4;i++){
-    //     best_score = -1;
-    //     best_j = -1;
+//     // acha o maior rank e coloca no 0, ate fechar o vetor
+//     for(i=0;i<4;i++){
+//         best_score = -1;
+//         best_j = -1;
             
-    //     for(j=0;j<4;j++){
+//         for(j=0;j<4;j++){
         
-    //         if(game.rank[j].posicao == -1){
-    //             if(game.rank[j].frutas > best_score){
-    //                 best_j = j;
-    //                 best_score = game.rank[j].frutas;
-    //             }
-    //             else if(game.rank[j].frutas == best_score){
-    //                 //se for igual vai comparar a colisao nas paredes
-    //                 if(game.rank[j].colisoes < game.rank[best_j].colisoes){
-    //                     best_j = j;
-    //                 }
-    //                 else if(game.rank[j].colisoes == game.rank[best_j].colisoes){
-    //                     //se for igual vai comparar o uso
-    //                     if(game.rank[j].usos > game.rank[best_j].usos){
-    //                         best_j = j;
-    //                     }
-    //                     else if(game.rank[j].usos == game.rank[best_j].usos){
-    //                         //se for igual vai olhar a ordem alfabetica
-    //                         if(letterPriority(game.rank[j].type)> letterPriority(game.rank[best_j].type)){
-    //                             best_j = j;
-    //                         }
+//             if(game.rank[j].posicao == -1){
+//                 if(game.rank[j].frutas > best_score){
+//                     best_j = j;
+//                     best_score = game.rank[j].frutas;
+//                 }
+//                 else if(game.rank[j].frutas == best_score){
+//                     //se for igual vai comparar a colisao nas paredes
+//                     if(game.rank[j].colisoes < game.rank[best_j].colisoes){
+//                         best_j = j;
+//                     }
+//                     else if(game.rank[j].colisoes == game.rank[best_j].colisoes){
+//                         //se for igual vai comparar o uso
+//                         if(game.rank[j].usos > game.rank[best_j].usos){
+//                             best_j = j;
+//                         }
+//                         else if(game.rank[j].usos == game.rank[best_j].usos){
+//                             //se for igual vai olhar a ordem alfabetica
+//                             if(letterPriority(game.rank[j].type)> letterPriority(game.rank[best_j].type)){
+//                                 best_j = j;
+//                             }
         
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
         
-    //     game.rank[best_j].posicao = i;
+//         game.rank[best_j].posicao = i;
         
-    // }
+//     }
     
-    // ///aqui termina a organização lógica/////////////////////////////
+//     ///aqui termina a organização lógica/////////////////////////////
     
-    // //imprime o ranking
+//     //imprime o ranking
     
-    // for(i=0;i<4;i++){
-    //     for(j=0;j<4;j++){
-    //         if(game.rank[j].posicao == i){
-    //             fprintf(pRank, "%c,%d,%d,%d\n", game.rank[j].type, game.rank[j].frutas, game.rank[j].colisoes, game.rank[j].usos);
-    //         }
-    //     }
-    // }
+//     for(i=0;i<4;i++){
+//         for(j=0;j<4;j++){
+//             if(game.rank[j].posicao == i){
+//                 fprintf(pRank, "%c,%d,%d,%d\n", game.rank[j].type, game.rank[j].frutas, game.rank[j].colisoes, game.rank[j].usos);
+//             }
+//         }
+//     }
    
-    // fclose(pRank);
+//     fclose(pRank);
 
-    return;
-}
+//     return;
+// }
 
 FILE* GeraArquivoSaida(){
     FILE *pSaida;
