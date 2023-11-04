@@ -39,14 +39,7 @@ tPacman* ClonaPacman(tPacman* pacman){
 
     return pacmanClone;
 }
-/**
- * Clona a lista historico de movimentos significativos do pacman.
- * Aloca dinamicamente todas as estruturas do histórico de
- * movimentos do pacman original (passado como parâmetro): a lista e os movimentos da lista.
- * E por fim copia as informações do histórico original para o clone.
- * Retorna um ponteiro para o tMovimento** clone.
- * \param pacman pacman
- */
+
 tMovimento** ClonaHistoricoDeMovimentosSignificativosPacman(tPacman* pacman){
     tMovimento** cloneMovimento = NULL;
 
@@ -62,11 +55,6 @@ tMovimento** ClonaHistoricoDeMovimentosSignificativosPacman(tPacman* pacman){
     return cloneMovimento;
 }
 
-/**
- * Retorna a posição do pacman.
- * 
- * \param pacman pacman
- */
 tPosicao* ObtemPosicaoPacman(tPacman* pacman){
     tPosicao* posicaoPacman = NULL;
 
@@ -83,17 +71,7 @@ int EstaVivoPacman(tPacman* pacman){
         return 0;
     }
 }
-/**
- * Função que irá mover o pacman no mapa, atualizando sua posição.
- * Dado o pacman, o mapa, e o comando do jogador, a posição do pacman
- * é atualizada. Consultas ao mapa deverão ser feitas para ver se
- * a posição pode ser realmente atualizada ou não, como por exemplo,
- * se o pacman encontrou uma parede ele não se move.
- * 
- * \param pacman pacman
- * \param mapa o mapa que contem o pacman
- * \param comando o comando para onde irá o pacman
- */
+
 void MovePacman(tPacman* pacman, tMapa* mapa, COMANDO comando){
     //prevê a próxima posicao 
     tPosicao* proximaPosicao = NULL;
@@ -102,15 +80,19 @@ void MovePacman(tPacman* pacman, tMapa* mapa, COMANDO comando){
 
     if(comando == MOV_CIMA){
         proximaPosicao = CriaPosicao(pI - 1, pJ);
+        pacman->nMovimentosCima++;
     }
     else if(comando == MOV_BAIXO){
         proximaPosicao = CriaPosicao(pI + 1, pJ);
+        pacman->nMovimentosBaixo++;
     }
     else if(comando == MOV_DIREITA){
         proximaPosicao = CriaPosicao(pI, pJ + 1);
+        pacman->nMovimentosDireita++;
     }
     else if(comando == MOV_ESQUERDA){
         proximaPosicao = CriaPosicao(pI, pJ - 1);
+        pacman->nMovimentosEsquerda++;
     }
 
     //verifica se a proxima posicao é valida e move 
@@ -119,7 +101,27 @@ void MovePacman(tPacman* pacman, tMapa* mapa, COMANDO comando){
     int ppJ = ObtemColunaPosicao(proximaPosicao);
     
     if(EncontrouParedeMapa(mapa, proximaPosicao)){
-        //nada acontece. 
+        //a proxima posicao volta a ser a posicao atual, ou seja ele fica no mesmo lugar.
+        proximaPosicao = ClonaPosicao(pacman->posicaoAtual); 
+
+        //atualiza contador colisao
+        if(comando == MOV_CIMA){
+            pacman->nColisoesParedeCima++;
+        }
+        else if(comando == MOV_BAIXO){
+            pacman->nColisoesParedeBaixo++;
+        }
+        else if(comando == MOV_DIREITA){
+            pacman->nColisoesParedeDireita++;
+        }
+        else if(comando == MOV_ESQUERDA){
+            pacman->nColisoesParedeEsquerda++;
+        }
+
+        //adiciona movimento significativo;
+        char* acao = "colidiu com a parede";
+        InsereNovoMovimentoSignificativoPacman(pacman, comando, acao);
+    
     }
     else if(PossuiTunelMapa(mapa)){
         tTunel* tunelMapa = ObtemTunelMapa(mapa);
@@ -127,13 +129,35 @@ void MovePacman(tPacman* pacman, tMapa* mapa, COMANDO comando){
             //atualiza a trilha com a posicao do ultimo portal
             pacman->trilha[ppI][ppJ] = ObtemNumeroAtualMovimentosPacman(pacman);
             
-            LevaFinalTunel(tunelMapa, pacman->posicaoAtual);
+            LevaFinalTunel(tunelMapa, proximaPosicao);
         }
-        
     }
-    else{
-        pacman->posicaoAtual = ClonaPosicao(proximaPosicao);
+
+    //verifica se morreu OU se pontuou;
+    if(EncontrouComidaMapa(mapa, proximaPosicao)){
+
+        //atualiza o contador
+        if(comando == MOV_CIMA){
+            pacman->nFrutasComidasCima++;
+        }
+        else if(comando == MOV_BAIXO){
+            pacman->nFrutasComidasBaixo++;
+        }
+        else if(comando == MOV_DIREITA){
+            pacman->nFrutasComidasDireita++;
+        }
+        else if(comando == MOV_ESQUERDA){
+            pacman->nFrutasComidasEsquerda++;
+        }
+
+        AtualizaItemMapa(mapa, proximaPosicao, ' ');
+        //adicionamovimento significativo
+        char* acao = "pegou comida";
+        InsereNovoMovimentoSignificativoPacman(pacman, comando, acao);
     }
+
+    //atualiza a posicao atual do pacman para a proxima posicao
+    pacman->posicaoAtual = ClonaPosicao(proximaPosicao);
     
     DesalocaPosicao(proximaPosicao);
 
@@ -195,13 +219,12 @@ void AtualizaTrilhaPacman(tPacman* pacman){
  * \param pacman pacman
  */
 void SalvaTrilhaPacman(tPacman* pacman){
-    char fileName[100];
-    int portal = -1;
-    FILE *pTrail = NULL;
+    char nomeArquivo[100];
+    FILE *pTrilha = NULL;
 
-    sprintf(fileName, "trilha.txt");
+    sprintf(nomeArquivo, "trilha.txt");
 
-    pTrail = fopen(fileName, "w");
+    pTrilha = fopen(nomeArquivo, "w");
 
     int L = pacman->nLinhasTrilha;
     int C = pacman->nColunasTrilha;
@@ -210,16 +233,16 @@ void SalvaTrilhaPacman(tPacman* pacman){
     for(i=0; i<L;i++){
         for(j=0; j<C;j++){
             if(pacman->trilha[i][j] == -1){
-                fprintf(pTrail, "# ");
+                fprintf(pTrilha, "# ");
             }
             else{
-                fprintf(pTrail, "%d ", pacman->trilha[i][j]);
+                fprintf(pTrilha, "%d ", pacman->trilha[i][j]);
             }
         }
-        fprintf(pTrail, "\n");
+        fprintf(pTrilha, "\n");
     }
 
-    fclose(pTrail);
+    fclose(pTrilha);
 }
 
 /**
@@ -280,7 +303,7 @@ int ObtemNumeroAtualMovimentosPacman(tPacman* pacman){
     int nMovCima = ObtemNumeroMovimentosCimaPacman(pacman);
     int nMovBaixo = ObtemNumeroMovimentosBaixoPacman(pacman);
     int nMovDireita = ObtemNumeroMovimentosDireitaPacman(pacman);
-    int nMovEsquerda = ObtemNumeroColisoesParedeEsquerdaPacman(pacman);
+    int nMovEsquerda = ObtemNumeroMovimentosEsquerdaPacman(pacman);
 
     int nMovTotais = nMovCima + nMovBaixo + nMovDireita + nMovEsquerda;
     
@@ -289,10 +312,9 @@ int ObtemNumeroAtualMovimentosPacman(tPacman* pacman){
 
 int ObtemNumeroMovimentosSemPontuarPacman(tPacman* pacman){
     int nMovTotais = ObtemNumeroAtualMovimentosPacman(pacman);
+    int nMovPontuou = ObtemPontuacaoAtualPacman(pacman); 
 
-    int nMovSig = ObtemNumeroMovimentosSignificativosPacman(pacman); 
-
-    int nMovimentosSemPontuar = nMovTotais - nMovSig;
+    int nMovimentosSemPontuar = nMovTotais - nMovPontuou;
 
     return nMovimentosSemPontuar;
 }
