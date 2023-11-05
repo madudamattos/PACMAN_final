@@ -10,11 +10,17 @@
 
 typedef struct{
     char tipo;
-    char movimento;
+    COMANDO movimento;
     int status;
-    tPosicao posicaoFantasma;
-} tGhost;
+    tPosicao *posicao;
+} tFantasma;
 
+
+//funcoes de realizar jogo
+tFantasma** CriaFantasmas(tMapa *mapa);
+void MoveFantasmas(tMapa *mapa, tFantasma **fantasmas);
+
+//funcoes 
 void ImprimeMapa(tMapa *mapa, tPacman *pacman, FILE *pArquivo);
 
 //funcoes de geracao de arquivo
@@ -86,6 +92,126 @@ void ImprimeMapa(tMapa *mapa, tPacman *pacman, FILE *pArquivo){
     }
 
     DesalocaPosicao(posicaoPacman);
+}
+
+//funcoes jogo
+
+tFantasma** CriaFantasmas(tMapa *mapa){
+    tFantasma** fantasmas = calloc(4, sizeof(tFantasma));
+
+    //cria B
+    fantasmas[0]->tipo = 'B';
+    fantasmas[0]->movimento = MOV_ESQUERDA;
+    fantasmas[0]->posicao = ObtemPosicaoItemMapa(mapa, fantasmas[0]->tipo);
+    if(ObtemPosicaoItemMapa(mapa, 'B') == NULL){
+        fantasmas[0]->status = 0;
+    }
+    else{
+        fantasmas[0]->status = 1;
+    }
+
+    //cria P
+    fantasmas[1]->tipo = 'P';
+    fantasmas[1]->movimento = MOV_CIMA;
+    fantasmas[1]->posicao = ObtemPosicaoItemMapa(mapa, fantasmas[1]->tipo);
+    if(ObtemPosicaoItemMapa(mapa, fantasmas[1]->tipo) == NULL){
+        fantasmas[1]->status = 0;
+    }
+    else{
+        fantasmas[1]->status = 1;
+    }
+
+    //cria I
+    fantasmas[2]->tipo = 'I';
+    fantasmas[2]->movimento = MOV_BAIXO;
+    fantasmas[2]->posicao = ObtemPosicaoItemMapa(mapa, fantasmas[2]->tipo);
+    if(ObtemPosicaoItemMapa(mapa, fantasmas[2]->tipo) == NULL){
+        fantasmas[2]->status = 0;
+    }
+    else{
+        fantasmas[2]->status = 1;
+    }
+
+    //cria C
+    fantasmas[3]->tipo = 'C';
+    fantasmas[3]->movimento = MOV_DIREITA;
+    fantasmas[3]->posicao = ObtemPosicaoItemMapa(mapa, fantasmas[3]->tipo);
+    if(ObtemPosicaoItemMapa(mapa, fantasmas[3]->tipo) == NULL){
+        fantasmas[3]->status = 0;
+    }
+    else{
+        fantasmas[3]->status = 1;
+    }
+
+    return fantasmas;
+}
+
+void MoveFantasmas(tMapa *mapa, tFantasma **fantasmas){
+    //prevê a próxima posicao do fantasma
+    tPosicao* proximaPosicao = NULL;
+    int pI, pJ, i;
+
+    for(i=0; i<4; i++){
+
+        if(fantasmas[i]->status == 1){
+            pI = ObtemLinhaPosicao(fantasmas[i]->posicao);
+            pJ = ObtemColunaPosicao(fantasmas[i]->posicao);
+
+            DesalocaPosicao(fantasmas[i]->posicao);
+            
+            if(fantasmas[i]->movimento == MOV_CIMA){
+                proximaPosicao = CriaPosicao(pI - 1, pJ);
+            }
+            else if(fantasmas[i]->movimento == MOV_BAIXO){
+                proximaPosicao = CriaPosicao(pI + 1, pJ);
+            }
+            else if(fantasmas[i]->movimento == MOV_DIREITA){
+                proximaPosicao = CriaPosicao(pI, pJ + 1);
+            }
+            else if(fantasmas[i]->movimento == MOV_ESQUERDA){
+                proximaPosicao = CriaPosicao(pI, pJ - 1);
+            }   
+
+            //verifica se a proxima posicao é valida e move 
+            if(EncontrouParedeMapa(mapa, proximaPosicao)){
+                //inverte o padrao de movimento e ajusta a proxima posicao
+                fantasmas[i]->movimento = InverteMovimento(fantasmas[i]->movimento);
+
+                DesalocaPosicao(proximaPosicao);
+
+                if(fantasmas[i]->movimento == MOV_CIMA){
+                    proximaPosicao = CriaPosicao(pI - 1, pJ);
+                }
+                else if(fantasmas[i]->movimento == MOV_BAIXO){
+                    proximaPosicao = CriaPosicao(pI + 1, pJ);
+                }
+                else if(fantasmas[i]->movimento == MOV_DIREITA){
+                    proximaPosicao = CriaPosicao(pI, pJ + 1);
+                }
+                else if(fantasmas[i]->movimento == MOV_ESQUERDA){
+                    proximaPosicao = CriaPosicao(pI, pJ - 1);
+                }
+                
+            }
+
+            fantasmas[i]->posicao = ClonaPosicao(proximaPosicao);
+            DesalocaPosicao(proximaPosicao);
+        }
+
+    }
+
+    return;
+}
+
+void DesalocaFantasmas(tFantasma **fantasmas){
+    int i=0; 
+
+    for(i=0;i<4;i++){
+        DesalocaPosicao(fantasmas[i]->posicao);
+        free(fantasmas[i]);
+    }
+
+    free(fantasmas);
 }
 
 //funcoes de geracao de arquivo
@@ -165,112 +291,6 @@ void GeraArquivoResumo(tPacman *pacman){
 
     return;
 }
-
-// typedef struct{
-//     COMANDO MOVIMENTO; 
-//     int frutas;
-//     int colisoes;
-//     int usos;
-//     int posicao;
-// } tRanking;
-
-// void generateRankingFile(tPacman pacman){
-//     FILE *pRank = NULL;
-//     char arquivoRanking[100];
-//     int i, j, k;
-//     int best_score, best_j;
-//     int class[4];
-//     int best=-1;
-
-//     sprintf(arquivoRanking, "ranking.txt");
-
-//     pRank = fopen(arquivoRanking, "w");
-    
-//     game.rank[0].type = 'w';
-//     game.rank[1].type = 'a';
-//     game.rank[2].type = 's';
-//     game.rank[3].type = 'd';
-
-//     //zera todos os movimentos no começo
-//     for(i=0;i<4;i++){
-//         game.rank[i].frutas=0;
-//         game.rank[i].colisoes=0;
-//         game.rank[i].usos=0;
-//         game.rank[i].posicao= -1;
-//         class[i] = -1;
-//     }
-
-//     //inicializa todos os movimentos
-//     for(j=1;j<=game.pacman.moveCounter;j++){
-//         for(i=0;i<4;i++){
-//             if(game.pacman.moves[j].moveInput == game.rank[i].type){
-//                 game.rank[i].usos++;
-//                 if(game.pacman.moves[j].moveResult == GOTfrutas){
-//                     game.rank[i].frutas++;
-//                 }
-//                 else if(game.pacman.moves[j].moveResult == WALLCOLISION){
-//                     game.rank[i].colisoes++;
-//                 }
-//             }
-//         }
-//     }
-
-//     //aqui começa a logica de organização do ranking/////////////////
-
-//     // acha o maior rank e coloca no 0, ate fechar o vetor
-//     for(i=0;i<4;i++){
-//         best_score = -1;
-//         best_j = -1;
-            
-//         for(j=0;j<4;j++){
-        
-//             if(game.rank[j].posicao == -1){
-//                 if(game.rank[j].frutas > best_score){
-//                     best_j = j;
-//                     best_score = game.rank[j].frutas;
-//                 }
-//                 else if(game.rank[j].frutas == best_score){
-//                     //se for igual vai comparar a colisao nas paredes
-//                     if(game.rank[j].colisoes < game.rank[best_j].colisoes){
-//                         best_j = j;
-//                     }
-//                     else if(game.rank[j].colisoes == game.rank[best_j].colisoes){
-//                         //se for igual vai comparar o uso
-//                         if(game.rank[j].usos > game.rank[best_j].usos){
-//                             best_j = j;
-//                         }
-//                         else if(game.rank[j].usos == game.rank[best_j].usos){
-//                             //se for igual vai olhar a ordem alfabetica
-//                             if(letterPriority(game.rank[j].type)> letterPriority(game.rank[best_j].type)){
-//                                 best_j = j;
-//                             }
-        
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-        
-//         game.rank[best_j].posicao = i;
-        
-//     }
-    
-//     ///aqui termina a organização lógica/////////////////////////////
-    
-//     //imprime o ranking
-    
-//     for(i=0;i<4;i++){
-//         for(j=0;j<4;j++){
-//             if(game.rank[j].posicao == i){
-//                 fprintf(pRank, "%c,%d,%d,%d\n", game.rank[j].type, game.rank[j].frutas, game.rank[j].colisoes, game.rank[j].usos);
-//             }
-//         }
-//     }
-   
-//     fclose(pRank);
-
-//     return;
-// }
 
 FILE* GeraArquivoSaida(){
     FILE *pSaida;
