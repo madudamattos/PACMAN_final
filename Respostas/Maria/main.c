@@ -7,15 +7,14 @@
 #include "tTunel.h"
 #include "tMovimento.h"
 #include "tPacman.h"
-#include "tArquivo.h"
-//#include "tFantasma.h"
 
 //funcoes t Fantasma--------------
 typedef struct{
     char tipo;
     COMANDO movimento;
-    int status;
+    bool status;
     tPosicao *posicao;
+    bool comida;
 } tFantasma;
 
 tFantasma** CriaFantasmas(tMapa *mapa);
@@ -118,12 +117,13 @@ tFantasma** CriaFantasmas(tMapa *mapa){
 
         fantasmas[i]->posicao = ObtemPosicaoItemMapa(mapa, fantasmas[i]->tipo);
         if(fantasmas[i]->posicao != NULL){
-            fantasmas[i]->status = 1;
-            AtualizaItemMapa(mapa,fantasmas[i]->posicao, ' ');
+            fantasmas[i]->status = true;
         }
         else{
-            fantasmas[i]->status = 0;
+            fantasmas[i]->status = false;
         }
+        
+        fantasmas[i]->comida = false;
     }
 
     return fantasmas;
@@ -136,11 +136,9 @@ void MoveFantasmas(tMapa *mapa, tFantasma **fantasmas){
 
     for(i=0; i<4; i++){
 
-        if(fantasmas[i]->status == 1){
+        if(fantasmas[i]->status == true){
             pI = ObtemLinhaPosicao(fantasmas[i]->posicao);
             pJ = ObtemColunaPosicao(fantasmas[i]->posicao);
-
-            DesalocaPosicao(fantasmas[i]->posicao);
             
             if(fantasmas[i]->movimento == MOV_CIMA){
                 proximaPosicao = CriaPosicao(pI - 1, pJ);
@@ -177,6 +175,20 @@ void MoveFantasmas(tMapa *mapa, tFantasma **fantasmas){
                 
             }
 
+            //volta a comida pra posicao anterior
+            if(fantasmas[i]->comida == true){
+                AtualizaItemMapa(mapa, fantasmas[i]->posicao, '*');
+                fantasmas[i]->comida = false;
+            }
+
+            //verifica se a proxima casa que vai tem uma comida
+            if(EncontrouComidaMapa(mapa, proximaPosicao)){
+                fantasmas[i]->comida = true;
+            }
+
+            AtualizaItemMapa(mapa, proximaPosicao, fantasmas[i]->tipo);
+            
+            DesalocaPosicao(fantasmas[i]->posicao);
             fantasmas[i]->posicao = ClonaPosicao(proximaPosicao);
             DesalocaPosicao(proximaPosicao);
         }
@@ -239,13 +251,9 @@ void ImprimeMapa(tMapa *mapa, tPacman *pacman, FILE *pArquivo){
 
     for(i=0; i<L;i++){
         for(j=0; j<C;j++){
+            
             posicao = CriaPosicao(i, j);
-            if(SaoIguaisPosicao(posicao, posicaoPacman)){
-                fprintf(pArquivo, ">");
-            }
-            else{
-                fprintf(pArquivo, "%c", ObtemItemMapa(mapa, posicao));
-            }
+            fprintf(pArquivo, "%c", ObtemItemMapa(mapa, posicao));
             DesalocaPosicao(posicao);
         }
         fprintf(pArquivo, "\n");

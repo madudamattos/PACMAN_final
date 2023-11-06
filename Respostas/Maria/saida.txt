@@ -1,0 +1,14 @@
+Estado do jogo apos o movimento 'w':
+#########
+#   * I #
+# ### * #
+#     * #
+# #   #*#
+# ## ## #
+#  #  # #
+#>    C #
+#########
+Pontuacao: 0
+
+Voce venceu!
+Pontuacao final: 0
